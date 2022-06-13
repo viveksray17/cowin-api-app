@@ -60,4 +60,4 @@ def centers_by_district():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8000)
+    app.run()

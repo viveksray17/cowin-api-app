@@ -1,0 +1,37 @@
+{% extends "base.djhtml" %}
+{% block content %}
+  <table border=1>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Capacity(Dose 1)</th>
+        <th>Capacity(Dose 2)</th>
+        <th>Vaccine Name</th>
+        <th>Fee Type</th>
+        <th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for session in sessions %}
+        {% if session['available_capacity_dose1'] + session['available_capacity_dose2'] > 0 %}
+          <tr>
+            <td>{{ session['name'] }}</td>
+            <td>{{ session['available_capacity_dose1'] }}</td>
+            <td>{{ session['available_capacity_dose2'] }}</td>
+            <td>{{ session['vaccine'] }}</td>
+            {% if session['fee_type'] == 'Free' %}
+              <td bgcolor="green">{{ session['fee_type'] }}</td>
+            {% else %}
+              <td bgcolor="red">{{ session['fee_type'] }}</td>
+            {% endif %}
+            {% if session['max_age_limit'] %}
+              <td>{{ session['min_age_limit'] }} - {{ session['max_age_limit'] }}</td>
+            {% else %}
+              <td>{{ session['min_age_limit'] }}+</td>
+            {% endif %}
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

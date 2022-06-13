@@ -1,0 +1,23 @@
+{% extends "base.djhtml" %}
+{% block content %}
+  <form action="{{ url_for('select_district') }}" method="post">
+    Enter State Id <input type="text" name="state_id">
+    <input type="submit">
+  </form>
+  <table border=1>
+    <thead>
+      <tr>
+        <th>State Id</th>
+        <th>State</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for state in states %}
+        <tr>
+          <td>{{ state['state_id'] }}</td>
+          <td>{{ state['state_name'] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

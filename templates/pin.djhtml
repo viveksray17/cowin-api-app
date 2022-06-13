@@ -1,0 +1,7 @@
+{% extends "base.djhtml" %}
+{% block content %}
+  <form action="{{ url_for('centers_by_pin') }}" method="post">
+    Enter Pin Code <input type="text" name="pincode">
+    <input type="submit">
+  </form>
+{% endblock content %}

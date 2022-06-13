@@ -1,0 +1,5 @@
+{% extends "base.djhtml" %}
+{% block content %}
+  <a href="{{url_for('select_state')}}">Find By District</a>
+  <a href="{{url_for('get_pin_code')}}">Find By Pin</a>
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends "centers_table.djhtml" %}
+{% block dates %}
+  Today's Date: <a href="/findByDistrict/centers/{{district_id}}/{{todays_date}}">{{todays_date}}</a></br>
+  Selected Date: {{ date_selected }}</br>
+  Coming Dates:
+  {% for date in dates_coming %}
+    <a href="/findByDistrict/centers/{{district_id}}/{{date}}">{{date}}</a>
+  {% endfor %}</br>
+  Previous Dates:
+  {% for date in dates_previous %}
+    <a href="/findByDistrict/centers/{{district_id}}/{{date}}">{{date}}</a>
+  {% endfor %}
+{% endblock dates %}

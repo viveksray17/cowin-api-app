@@ -12,25 +12,36 @@ def home():
     return render_template("home.djhtml")
 
 
-@app.route("/findByPin")
+@app.route("/findByPin", methods=["GET", "POST"])
 def get_pin_code():
-    return render_template("pin.djhtml")
-
-
-@app.route("/findByPin/centers", methods=["GET", "POST"])
-def centers_by_pin():
     if request.method == "POST":
-        pincode = request.form["pincode"]
-        date = datetime.now().strftime("%d-%m-%Y")
-        centers_response = requests.get(
-            url+"/v2/appointment/sessions/public/findByPin", params={"pincode": pincode, "date": date})
-        if "error" in centers_response.json().keys():
-            return "Invalid Pin Code"
-        else:
-            sessions = centers_response.json()["sessions"]
-            return render_template("centers.djhtml", sessions=sessions, date=date)
+        return redirect(f"/findByPin/centers/{request.form['pincode']}/{datetime.today().strftime('%d-%m-%Y')}")
     else:
-        return redirect(url_for('get_pin_code'))
+        return render_template("pin.djhtml")
+
+
+@app.route("/findByPin/centers/<int:pin>/<string:date>", methods=["GET", "POST"])
+def centers_by_pin(pin, date):
+    centers_response = requests.get(
+        url+"/v2/appointment/sessions/public/findByPin", params={"pincode": pin, "date": date})
+    if "error" in centers_response.json().keys():
+        return "Invalid Pin Code"
+    else:
+        datetime_object = datetime.strptime(date, "%d-%m-%Y")
+        dates_coming = [
+            (datetime_object + timedelta(days=1)).strftime("%d-%m-%Y"),
+            (datetime_object + timedelta(days=2)).strftime("%d-%m-%Y"),
+            (datetime_object + timedelta(days=3)).strftime("%d-%m-%Y"),
+            (datetime_object + timedelta(days=4)).strftime("%d-%m-%Y"),
+        ]
+        dates_previous = [
+            (datetime_object - timedelta(days=1)).strftime("%d-%m-%Y"),
+            (datetime_object - timedelta(days=2)).strftime("%d-%m-%Y"),
+            (datetime_object - timedelta(days=3)).strftime("%d-%m-%Y"),
+            (datetime_object - timedelta(days=4)).strftime("%d-%m-%Y"),
+        ]
+        sessions = centers_response.json()["sessions"]
+        return render_template("centers_pincode.djhtml", pincode=pin, todays_date=datetime.today().strftime("%d-%m-%Y"), sessions=sessions, dates_coming=dates_coming, dates_previous=dates_previous)
 
 
 @app.route("/findByDistrict/select_state", methods=["GET", "POST"])
@@ -56,22 +67,23 @@ def select_district(state_id):
 @app.route("/findByDistrict/centers/<int:district_id>/<string:date>")
 def centers_by_district(district_id, date):
     datetime_object = datetime.strptime(date, "%d-%m-%Y")
-    dates = [
-        datetime_object.strftime("%d-%m-%Y"),
+    dates_coming = [
         (datetime_object + timedelta(days=1)).strftime("%d-%m-%Y"),
         (datetime_object + timedelta(days=2)).strftime("%d-%m-%Y"),
         (datetime_object + timedelta(days=3)).strftime("%d-%m-%Y"),
         (datetime_object + timedelta(days=4)).strftime("%d-%m-%Y"),
     ]
-    if date:
-        centers_response = requests.get(
-            url+"/v2/appointment/sessions/public/findByDistrict", params={"district_id": district_id, "date": date})
-    else:
-        centers_response = requests.get(
-            url+"/v2/appointment/sessions/public/findByDistrict", params={"district_id": district_id, "date": dates[0]})
+    dates_previous = [
+        (datetime_object - timedelta(days=1)).strftime("%d-%m-%Y"),
+        (datetime_object - timedelta(days=2)).strftime("%d-%m-%Y"),
+        (datetime_object - timedelta(days=3)).strftime("%d-%m-%Y"),
+        (datetime_object - timedelta(days=4)).strftime("%d-%m-%Y"),
+    ]
+    centers_response = requests.get(
+        url+"/v2/appointment/sessions/public/findByDistrict", params={"district_id": district_id, "date": date})
     sessions = centers_response.json()["sessions"]
-    return render_template("centers.djhtml", district_id=district_id, sessions=sessions, date_selected=date, todays_date=datetime.today().strftime("%d-%m-%Y"), dates=dates)
+    return render_template("centers_district.djhtml", district_id=district_id, sessions=sessions, date_selected=date, todays_date=datetime.today().strftime("%d-%m-%Y"), dates_coming=dates_coming, dates_previous=dates_previous)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

@@ -1,4 +1,5 @@
 import requests
+import json
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -37,9 +38,9 @@ def select_state():
     if request.method == "POST":
         return redirect(f"/findByDistrict/select_district/{request.form['state_id']}")
     else:
-        state_response = requests.get(url+"/v2/admin/location/states")
-        states = state_response.json()["states"]
-        return render_template("select_state.djhtml", states=states)
+        with open("metadata/states.json") as f:
+            states = json.load(f)["states"]
+            return render_template("select_state.djhtml", states=states)
 
 
 @app.route("/findByDistrict/select_district/<int:state_id>", methods=["GET", "POST"])
@@ -47,10 +48,9 @@ def select_district(state_id):
     if request.method == "POST":
         return redirect(f"/findByDistrict/centers/{request.form['district_id']}/{datetime.today().strftime('%d-%m-%Y')}")
     else:
-        district_response = requests.get(
-            url+f"/v2/admin/location/districts/{state_id}")
-        districts = district_response.json()["districts"]
-        return render_template("select_district.djhtml", districts=districts)
+        with open(f"metadata/districts/state{state_id}.json") as f:
+            districts = json.load(f)["districts"]
+            return render_template("select_district.djhtml", districts=districts)
 
 
 @app.route("/findByDistrict/centers/<int:district_id>/<string:date>")

@@ -1,6 +1,6 @@
 {% extends "base.djhtml" %}
 {% block content %}
-  <form action="{{ url_for('select_district') }}" method="post">
+  <form action="" method="post">
     Enter State Id <input type="text" name="state_id">
     <input type="submit">
   </form>

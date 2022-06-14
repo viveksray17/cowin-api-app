@@ -3,11 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    {% if title %}
-      <title>Cowin App - {{ title }}</title>
-    {% else %}
-      <title>Cowin App</title>
-    {% endif %}
+    <title>Cowin App</title>
+    <style type="text/css" media="all">
+      a {
+        color: blue;
+      }
+    </style>
   </head>
   <body>
     {% block content %}

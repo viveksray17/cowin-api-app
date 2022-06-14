@@ -41,7 +41,7 @@ def centers_by_pin(pin, date):
             (datetime_object - timedelta(days=4)).strftime("%d-%m-%Y"),
         ]
         sessions = centers_response.json()["sessions"]
-        return render_template("centers_pincode.djhtml", pincode=pin, todays_date=datetime.today().strftime("%d-%m-%Y"), sessions=sessions, dates_coming=dates_coming, dates_previous=dates_previous)
+        return render_template("centers_pincode.djhtml", pincode=pin, todays_date=datetime.today().strftime("%d-%m-%Y"), sessions=sessions, date_selected=date, dates_coming=dates_coming, dates_previous=dates_previous)
 
 
 @app.route("/findByDistrict/select_state", methods=["GET", "POST"])

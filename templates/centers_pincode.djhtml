@@ -4,10 +4,10 @@
   Selected Date: {{ date_selected }}</br>
   Coming Dates:
   {% for date in dates_coming %}
-    <a href="/findByPin/centers/{{ pincode }}/{{ todays_date }}">{{date}}</a>
+    <a href="/findByPin/centers/{{ pincode }}/{{ date }}">{{date}}</a>
   {% endfor %}</br>
   Previous Dates:
   {% for date in dates_previous %}
-    <a href="/findByPin/centers/{{ pincode }}/{{ todays_date }}">{{date}}</a>
+    <a href="/findByPin/centers/{{ pincode }}/{{ date }}">{{date}}</a>
   {% endfor %}
 {% endblock dates %}
